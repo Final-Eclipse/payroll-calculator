@@ -123,11 +123,10 @@ class Blackjack(DeckOfCards):
             while command != "hit" and command != "stand" and command != "quit":
                 command = input("Type hit, stand, or quit.\n")
             if command == "hit":
-                print(self.hit(1))
-                print(self.evaluate_hand(1))
-            
-            # -1 = Dealer
+                self.hit(1)
+                
             print(self.hit(dealer=True))
+            print(self.evaluate_hand(1))
             print(self.evaluate_hand(dealer=True))
 
     # player_num can be an int or list
@@ -167,7 +166,7 @@ class Blackjack(DeckOfCards):
                     else:
                         hand_value += 1
             
-            result = f"Dealer's hand is currently worth {hand_value}."
+            result = f"Dealer's hand is currently worth {hand_value}.\n"
 
         elif type(player_num) == int:
             hand_value = 0
@@ -247,13 +246,13 @@ class Blackjack(DeckOfCards):
             result = "\n".join(result)
 
         if hand_value > 21 and type(player_num) == int:
-            return self.players[f"Player {player_num} bust with a {card} on {hand_value}!"]
+            return f"Player {player_num} bust with a {card} on {hand_value}!\n"
         elif hand_value > 21 and type(player_num) == list:
-            return self.players[f"Player {player} bust with a {card} on {hand_value}!"]
+            return f"Player {player} bust with a {card} on {hand_value}!\n"
         else:
             return result
     
-    def hit(self, player_num: int = 0, dealer=False) -> dict:
+    def hit(self, player_num: int = 0, dealer: bool = False) -> dict:
         if dealer == True:
             super().draw(dealer=dealer)
         else:
@@ -274,10 +273,11 @@ blackjack = Blackjack(["SA", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9",
     "D4", "D5", "D6", "D7", "D8", "D9", "D10", "DJ", "DQ", "DK", 
     "CA", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", 
     "CJ", "CQ", "CK"])
-blackjack.add_players(2)
+blackjack.add_players(1)
 blackjack.shuffle()
-print(blackjack.deck)
+# # print(blackjack.deck)
 print(blackjack.play())
+
 
 
 
