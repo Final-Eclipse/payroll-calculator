@@ -10,7 +10,8 @@ class DeckOfCards:
         self.deck = deck
         DeckOfCards.original_deck = deck.copy()
         self.players = {}
-     
+        self.burn_pile = []
+    
     def add_players(self, num_players: int) -> None:
         for x in range(DeckOfCards.current_players + 1, DeckOfCards.current_players + num_players + 1):
             DeckOfCards.current_players += 1
@@ -37,6 +38,7 @@ class DeckOfCards:
             j = randint(0, i)
             self.deck[i], self.deck[j] = self.deck[j], self.deck[i]
     
+    # Gives each player a specified amount of cards
     def deal(self, cards_per_player: int) -> None:
         if DeckOfCards.current_players == 0:
             raise Exception(f"There are {DeckOfCards.current_players} players to deal cards to.")
@@ -50,6 +52,7 @@ class DeckOfCards:
                 self.players[player].append(self.deck[0])
                 self.deck.pop(0)
 
+    # Draws one or more cards to a specified player
     def draw(self, player_num: int = 0, num_cards_to_draw: int = 1, dealer=False) -> None:
         if DeckOfCards.current_players == 0:
             raise Exception(f"There are {DeckOfCards.current_players} players to draw cards.")
@@ -63,15 +66,18 @@ class DeckOfCards:
             self.players[key].append(self.deck[0])
             self.deck.pop(0)    
     
+    # Resets the deck back to its original state 
     def reset(self) -> None:
         self.deck = DeckOfCards.original_deck
 
+    # Returns how many cards are left in the deck
     def cards_left(self) -> int:
         for cards_left, card in enumerate(range(0, len(self.deck) + 1)):
             continue
         
         return cards_left
 
+    # Change the deck and its original copy to something else
     def change_deck(self, new_deck: list) -> None:
         if type(new_deck) != list:
             raise Exception("change_deck() takes a list argument only.")
@@ -81,19 +87,36 @@ class DeckOfCards:
             
     # Cuts the deck at a position, cuts in a random position if not specified
     def cut(self, position=None):
-        print('cut')
+        if position != None and type(position) != int:
+            raise Exception("cut() takes an int argument or none at all")
+        if position == None:
+            position = randint(0, len(self.deck) - 1)
+
+        for card in self.deck[0:position]:
+            self.deck.append(card)
+        self.deck[0:position] = ""
+            
 
     # Removes the top card, or multiple if specified
     def burn(self, num_cards=1):
-        pass
-    
+        self.burn_pile += self.deck[0:num_cards]
+        self.deck[0:num_cards] = ""
+
     # Shows the top card, or multiple if specified
     def peek(self, num_cards=1):
-        pass
-
+        return self.deck[0]
+    
     # Sorts a player's hand
+    # Spades (highest)
+    # Hearts
+    # Diamonds
+    # Clubs (lowest)
+    # Joker-Ace-King or Ace-King-Joker
+
+
     def sort(self, player_num):
-        pass
+        self.players[f"Player {player_num}"].sort()
+        print(self.players)
 
     # Returns a player's cards to the bottom of the deck
     def return_player_cards(self):
@@ -232,18 +255,45 @@ blackjack = Blackjack(["SA", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9",
     "CA", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", 
     "CJ", "CQ", "CK"])
 
+card_template = """
+___________
+|XX       |
+|X X X X  |
+|    X    | 
+|  X X X  | 
+|    X    |
+|  X X X X|
+|       XX|
+‾‾‾‾‾‾‾‾‾‾‾
+"""
+x_num = 1
+for index, x in enumerate(card_template):
+    if x == "X":
+        print(f"x{x_num}= {index}")
+        x_num += 1
+    match index:
+        case 1:
+            card_template = card_template[0:14] + "A" + card_template[15:]
+            card_template = card_template[0:15] + "A" + card_template[16:]
+
+print(card_template)
+# 1 = 55
+
 
 # Add the possibility for more than one person to play Blackjack
-blackjack.add_players(2)
-blackjack.shuffle()
-# # print(blackjack.deck)
-blackjack.play()
+# blackjack.add_players(1)
+# blackjack.shuffle()
+# print(blackjack.deck)
+# blackjack.play()
 
-
-# cards.add_players(4)
-# cards.draw(2, 5)
-# cards.deal(2)
+# cards.add_players(1)
+# cards.shuffle()
+# cards.shuffle()
+# cards.shuffle()
+# cards.shuffle()
+# cards.draw(1, 10)
 # print(cards.players)
+# cards.sort(1)
 
 
 """
@@ -283,6 +333,5 @@ You must bet again for the second hand
 Aces often only receive one card each when split
 A split Ace + 10 is not a natural blackjack—it's just 21
 """
-
 
 
