@@ -22,7 +22,6 @@ class MainWindow(QMainWindow):
 
         for key, button in self.key_widgets.items():
             if key != "key_display":
-                # button.clicked.connect(lambda checked, keyboard_key=None: self.set_display_text(keyboard_key=keyboard_key))
                 button.clicked.connect(self.set_display_text)
 
         self.current_entry = ""
